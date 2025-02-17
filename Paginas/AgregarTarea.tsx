@@ -1,60 +1,53 @@
-import { View, Text, Button, StyleSheet,TextInput } from 'react-native'
-import React, { useState } from 'react'
-import { useContextTarea } from '../Provider/TareaProvider'
-import { useNavigation } from '@react-navigation/native'
-import { Tarea } from '../Modelos/Tarea'
+import { View, Text, Button, StyleSheet, TextInput } from 'react-native';
+import React, { useEffect } from 'react';
+import { useContextTarea } from '../Provider/TareaProvider';
+import { useNavigation } from '@react-navigation/native';
 
 export default function AgregarTarea() {
+  const navegacion = useNavigation();
+  const { agregarTarea, actualizarTarea, getTarea, texto, setTexto, tarea, setEditingTarea } = useContextTarea();
 
-  const navegacion = useNavigation()
- // const [texto, setTexto]= useState<string>('')
-  const {agregarTarea,getTarea,texto,setTexto} = useContextTarea();
+  useEffect(() => {
+    if (tarea) {
+      setTexto(tarea.descripcion);
+    }
+  }, [tarea]);
 
-
-  function agregar(){
-    agregarTarea(texto);
-    setTexto('')
-    getTarea()
-    navegacion.navigate('Home' as never)
-   
-
+  function guardarTarea() {
+    if (tarea) {
+      actualizarTarea(tarea.id, texto);
+      setEditingTarea(null);
+    } else {
+      agregarTarea(texto);
+    }
+    setTexto('');
+    getTarea();
+    navegacion.navigate('Home' as never);
   }
 
-  
   return (
     <View style={style.container}>
-      <Text>Agregar tarea</Text>
-
-     
-
+      <Text>{tarea ? "Editar tarea" : "Agregar tarea"}</Text>
       <TextInput
-      placeholder='Agregar descripcion Tarea'
-      value={texto}
-      onChangeText={setTexto}
-      style={style.input}
-      >
-
-      </TextInput>
-
-      <Text>Agregar tarea</Text>
-
-
-
-     <Button title='Agregar Tarea' onPress={()=>agregar()}></Button>
+        placeholder="Descripción de la tarea"
+        value={texto}
+        onChangeText={setTexto}
+        style={style.input}
+      />
+      <Button title={tarea ? "Actualizar Tarea" : "Agregar Tarea"} onPress={guardarTarea} />
     </View>
-  )
+  );
 }
 
-const style=StyleSheet.create({
-  container:{
-    flex:1,
-    padding:20,
-    justifyContent:'center'
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  input:{
-    borderWidth:1,
-    borderBlockColor:'blue',
-    padding:10,
-    marginBottom:5
-  }
-})
+  input: {
+    borderWidth: 1,
+    borderColor: 'blue',
+    padding: 10,
+    marginBottom: 5,
+  },
+});
