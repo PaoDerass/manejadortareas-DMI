@@ -1,4 +1,4 @@
-import { View, Text, TextInput, FlatList, StyleSheet } from 'react-native';
+import { View, TextInput, FlatList, StyleSheet, Text } from 'react-native';
 import React, { useState } from 'react';
 import { useContextTarea } from '../Provider/TareaProvider';
 
@@ -7,7 +7,7 @@ export default function Buscador() {
   const [search, setSearch] = useState('');
   const [filteredTareas, setFilteredTareas] = useState(tarea);
 
-  const handleSearch = (text:string) => {
+  const handleSearch = (text: string) => {
     setSearch(text);
     if (text) {
       const filtered = tarea.filter((t) =>
